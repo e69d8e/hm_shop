@@ -22,6 +22,7 @@ class _HomeViewState extends State<HomeView> {
     super.initState();
     _getBanners();
     _getCategorys();
+    _getSpecialRecommend();
   }
   // 获取轮播图
   _getBanners() async {
@@ -38,6 +39,13 @@ class _HomeViewState extends State<HomeView> {
     });
   }
 
+  // 获取特惠推荐
+  SpecialRecommend _specialRecommend = SpecialRecommend(id: "", title: "", subTypes: []);
+  _getSpecialRecommend() async {
+    _specialRecommend = await getPorductList();
+    setState(() {
+    });
+  }
 
 
   List<Widget> getSlivers() {
@@ -46,7 +54,7 @@ class _HomeViewState extends State<HomeView> {
       SliverToBoxAdapter(child: SizedBox(height: 10)),
       SliverToBoxAdapter(child: Hmcategory(categorys: _categorys,)),
       SliverToBoxAdapter(child: SizedBox(height: 10)),
-      SliverToBoxAdapter(child: Hmsuggestion()),
+      SliverToBoxAdapter(child: Hmsuggestion(specialRecommend: _specialRecommend,)),
       SliverToBoxAdapter(child: SizedBox(height: 10)),
       SliverToBoxAdapter(
         child: Padding(
