@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hm_shop/api/home.dart';
 import 'package:hm_shop/components/home/HmCategory.dart';
 import 'package:hm_shop/components/home/HmHot.dart';
 import 'package:hm_shop/components/home/HmMoreList.dart';
@@ -14,17 +15,36 @@ class HomeView extends StatefulWidget {
 }
 
 class _HomeViewState extends State<HomeView> {
-  final List<BannerItem> _banners = [
-    BannerItem(id: 1, imgUrl: 'https://i1.hdslb.com/bfs/bangumi/image/e5a05ff3038119e944b5dad65033cf8bbcde0831.png@564w_320h.webp'),
-    BannerItem(id: 2, imgUrl: 'https://i1.hdslb.com/bfs/bangumi/image/e5a05ff3038119e944b5dad65033cf8bbcde0831.png@564w_320h.webp'),
-    BannerItem(id: 3, imgUrl: 'https://i1.hdslb.com/bfs/bangumi/image/c555348a0a47f2ca1729526e1bb46efe5af3d341.png@564w_320h.webp'),
+  List<BannerItem> _banners = [
   ];
+  @override
+  void initState() {
+    super.initState();
+    _getBanners();
+    _getCategorys();
+  }
+  // 获取轮播图
+  _getBanners() async {
+    _banners = await getBannersApi();
+    setState(() {
+    });
+  }
+
+  List<CategoryItem> _categorys = [];
+  // 获取分类
+  _getCategorys() async {
+    _categorys = await getCategoriesApi();
+    setState(() {
+    });
+  }
+
+
 
   List<Widget> getSlivers() {
     return [
       SliverToBoxAdapter(child: Hmsliver(banners: _banners,)),
       SliverToBoxAdapter(child: SizedBox(height: 10)),
-      SliverToBoxAdapter(child: Hmcategory()),
+      SliverToBoxAdapter(child: Hmcategory(categorys: _categorys,)),
       SliverToBoxAdapter(child: SizedBox(height: 10)),
       SliverToBoxAdapter(child: Hmsuggestion()),
       SliverToBoxAdapter(child: SizedBox(height: 10)),

@@ -86,16 +86,18 @@ class _HmsliverState extends State<Hmsliver> {
             hintText: '搜索',
             hintStyle: TextStyle(color: Colors.white),
             suffixIcon: IconButton(
-              icon: Icon(Icons.clear),
+              icon: Icon(Icons.search, size: 20),
               color: Colors.white,
               onPressed: () {
+                if (_inputControl.text.isEmpty) return;
+                print('搜索内容：${_inputControl.text}');
                 _inputControl.clear();
-              },
+              }, 
             ),
-            prefixIcon: Icon(Icons.search, color: Colors.white),
+            // prefixIcon: Icon(Icons.search, color: Colors.white),
             filled: true,
             fillColor: Color.fromRGBO(0, 0, 0, 0.6),
-            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+            contentPadding: EdgeInsets.symmetric(vertical: 0, horizontal: 20),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(25),
               borderSide: BorderSide.none,
