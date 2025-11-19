@@ -5,6 +5,7 @@ import 'package:hm_shop/components/home/HmHot.dart';
 import 'package:hm_shop/components/home/HmMoreList.dart';
 import 'package:hm_shop/components/home/HmSliver.dart';
 import 'package:hm_shop/components/home/HmSuggestion.dart';
+import 'package:hm_shop/utils/ToastUtil.dart';
 import 'package:hm_shop/viewmodels/home.dart';
 
 class HomeView extends StatefulWidget {
@@ -19,35 +20,40 @@ class _HomeViewState extends State<HomeView> {
   @override
   void initState() {
     super.initState();
-    _getBanners();
-    _getCategorys();
-    _getSpecialRecommend();
-    _getInVogue();
-    _getOneStop();
-    _getRecommends();
+    // _getBanners();
+    // _getCategorys();
+    // _getSpecialRecommend();
+    // _getInVogue();
+    // _getOneStop();
+    // _getRecommends();
+
+    Future.microtask(() {
+      _onRefresh();
+    });
     // 注册监听事件
     _registerEvent();
   }
 
   // 页码
-  int page = 1;
+  int _page = 1;
   // 是否还有更多
-  bool haveMore = true;
+  bool _hasMore = true;
   // 是否在加载中
-  bool isLoading = false;
-  
+  bool _isLoading = false;
+
   // 添加监听屏幕滚动事件
   final ScrollController _scrollController = ScrollController();
   _registerEvent() {
     // 监听屏幕滚动
     _scrollController.addListener(() {
-      if (_scrollController.position.maxScrollExtent - _scrollController.offset < 50) {
-        if (isLoading || !haveMore) {
+      if (_scrollController.position.maxScrollExtent -
+              _scrollController.offset <
+          50) {
+        if (_isLoading || !_hasMore) {
           return;
         }
         _getRecommends();
         print("触发加载更多");
-
       }
     });
   }
@@ -55,14 +61,12 @@ class _HomeViewState extends State<HomeView> {
   // 获取轮播图
   _getBanners() async {
     _banners = await getBannersApi();
-    setState(() {});
   }
 
   List<CategoryItem> _categorys = [];
   // 获取分类
   _getCategorys() async {
     _categorys = await getCategoriesApi();
-    setState(() {});
   }
 
   // 获取特惠推荐
@@ -73,33 +77,51 @@ class _HomeViewState extends State<HomeView> {
   );
   _getSpecialRecommend() async {
     _specialRecommend = await getPorductListApi();
-    setState(() {});
   }
 
   // 爆款推荐
   SpecialRecommend _inVogue = SpecialRecommend(id: "", title: "", subTypes: []);
   _getInVogue() async {
     _inVogue = await getInVogueApi();
-    setState(() {});
   }
 
   // 一站买全
   SpecialRecommend _oneStop = SpecialRecommend(id: "", title: "", subTypes: []);
   _getOneStop() async {
     _oneStop = await getOneStopApi();
-    setState(() {});
   }
 
   // 推荐列表
   List<GoodsDetailItem> _recommends = [];
   _getRecommends() async {
-    isLoading = true;
-    _recommends = await getRecommendsApi({"limit": page * 8});
-    isLoading = false;
-    if (_recommends.length < page * 8) {
-      haveMore = false;
+    _isLoading = true;
+    _recommends = await getRecommendsApi({"limit": _page * 8});
+    _isLoading = false;
+    if (_recommends.length < _page * 8) {
+      _hasMore = false;
     }
-    page++;
+    _page++;
+    setState(() {});
+  }
+
+  // 添加下拉刷新方法
+  Future<void> _onRefresh() async {
+    // 重置分页参数
+    _page = 1;
+    _hasMore = true;
+    _isLoading = false;
+
+    // 重新获取所有数据
+    await _getBanners();
+    await _getCategorys();
+    await _getSpecialRecommend();
+    await _getInVogue();
+    await _getOneStop();
+    await _getRecommends();
+
+    setState(() {});
+
+    ToastUtil.showToast(context, "刷新成功");
     setState(() {});
   }
 
@@ -131,14 +153,21 @@ class _HomeViewState extends State<HomeView> {
         ),
       ),
       SliverToBoxAdapter(child: SizedBox(height: 10)),
-      Hmmorelist(recommendList: _recommends,),
+      Hmmorelist(recommendList: _recommends),
     ];
   }
 
+  final GlobalKey<RefreshIndicatorState> _key = GlobalKey();
+
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      controller: _scrollController,
-      slivers: getSlivers());
+    return RefreshIndicator(
+      key: _key,
+      onRefresh: _onRefresh,
+      child: CustomScrollView(
+        controller: _scrollController,
+        slivers: getSlivers(),
+      ),
+    );
   }
 }
