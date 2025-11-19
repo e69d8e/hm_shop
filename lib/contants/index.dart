@@ -9,4 +9,7 @@ class HttpConstants {
   static const String BANNER_LIST = "/home/banner"; // 轮播图列表 
   static const String CATEGORY_LIST = "/home/category/head"; // 分类列表
   static const String PRODUCT_LIST = "/hot/preference"; // 特惠推荐
+  static const String IN_VOGUE = "/hot/inVogue";
+  static const String ONE_SEOP = "/hot/oneStop";
+  static const String RECOMMEND_LIST = "/home/recommend";
 }

@@ -118,9 +118,34 @@ class Item {
       id: json['id'] ?? "",
       name: json['name'] ?? "",
       picture: json['picture'] ?? "",
-      price: json['price'] ?? "0.0",
+      price: (json['price'] ?? "0.0").toString(),
       orderNum: json['orderNum'] ?? 0,
       desc: json['desc'] ?? "",
+    );
+  }
+}
+
+
+class GoodsDetailItem extends Item {
+  int payCount;
+  GoodsDetailItem({
+    required super.id,
+    required super.name,
+    required super.picture,
+    required super.price,
+    required super.desc,
+    required super.orderNum,
+    required this.payCount,
+  });
+  factory GoodsDetailItem.fromJson(Map<String, dynamic> json) {
+    return GoodsDetailItem(
+      id: json['id'] ?? "",
+      name: json['name'] ?? "",
+      picture: json['picture'] ?? "",
+      price: (json['price'] ?? "0.0").toString(),
+      orderNum: json['orderNum'] ?? 0,
+      desc: json['desc'] ?? "",
+      payCount: json['payCount'] ?? 0,
     );
   }
 }

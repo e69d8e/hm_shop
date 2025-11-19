@@ -14,8 +14,31 @@ Future<List<CategoryItem>> getCategoriesApi() async {
       .toList();
 }
 
-Future<SpecialRecommend> getPorductList() async {
+Future<SpecialRecommend> getPorductListApi() async {
   return SpecialRecommend.fromJson(
     await diorequest.get(HttpConstants.PRODUCT_LIST),
   );
+}
+
+Future<SpecialRecommend> getInVogueApi() async {
+  return SpecialRecommend.fromJson(
+    await diorequest.get(HttpConstants.IN_VOGUE),
+  );
+}
+
+Future<SpecialRecommend> getOneStopApi() async {
+  return SpecialRecommend.fromJson(
+    await diorequest.get(HttpConstants.ONE_SEOP),
+  );
+}
+
+Future<List<GoodsDetailItem>> getRecommendsApi(
+  Map<String, dynamic> params,
+) async {
+  return (((await diorequest.get(HttpConstants.RECOMMEND_LIST, params: params))
+              as List)
+          .map(
+            (item) => GoodsDetailItem.fromJson(item as Map<String, dynamic>),
+          ))
+      .toList();
 }

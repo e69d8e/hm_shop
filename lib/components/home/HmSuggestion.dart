@@ -12,7 +12,9 @@ class Hmsuggestion extends StatefulWidget {
 
 class _HmsuggestionState extends State<Hmsuggestion> {
   List<Item> _getDisplayItems() {
-    if (widget.specialRecommend.subTypes.isEmpty) return [];
+    if (widget.specialRecommend.subTypes.isEmpty ||
+        widget.specialRecommend.subTypes.first.goodsItems.items.isEmpty)
+      return [];
     return widget.specialRecommend.subTypes.first.goodsItems.items
         .take(3)
         .toList(); // 获取前3个商品
@@ -36,7 +38,7 @@ class _HmsuggestionState extends State<Hmsuggestion> {
               child: Image.network(
                 errorBuilder: (context, error, stackTrace) => Image.asset(
                   "lib/assets/home_cmd_inner.png",
-                  height: 110,
+                  height: 100,
                   width: 80,
                   fit: BoxFit.cover,
                 ),
@@ -55,12 +57,15 @@ class _HmsuggestionState extends State<Hmsuggestion> {
                 borderRadius: BorderRadius.circular(15),
                 color: Colors.red,
               ),
-              child: Text("¥ ${items[i].price}", style: TextStyle(
-                color: Colors.white,
-                fontSize: 12,
-                fontWeight: FontWeight.bold
-              ),),
-            )
+              child: Text(
+                "¥ ${items[i].price}",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
           ],
         );
       }),
@@ -94,7 +99,13 @@ class _HmsuggestionState extends State<Hmsuggestion> {
               ),
             ),
             SizedBox(height: 10),
-            Row(children: [_buildLeft(), SizedBox(width: 10), Expanded(child: _buildRight())]),
+            Row(
+              children: [
+                _buildLeft(),
+                SizedBox(width: 10),
+                Expanded(child: _buildRight()),
+              ],
+            ),
           ],
         ),
       ),
